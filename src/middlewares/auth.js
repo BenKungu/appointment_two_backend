@@ -2,7 +2,7 @@
 
 function authenticateUser(req, res, next) {
   // Your authentication logic here
-  if (/* user is authenticated */) {
+  if (user) {
     next(); // Continue to the next middleware or route handler
   } else {
     res.status(401).json({ message: 'Unauthorized' });

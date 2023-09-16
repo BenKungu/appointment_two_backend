@@ -1,31 +1,21 @@
+// server.js
+
 const express = require("express");
-const app = express();
-const port = 3000; // or any port you prefer
-
-// Middleware and route setup go here
-
+const bodyParser = require("body-parser");
+const sequelize = require("./config/database");
 const appointmentsRouter = require("./routes/appointments");
-const formData = req.body;
 
+const app = express();
+const port = 3000; // Use your desired port
 
-// Use the appointments router for the /api/appointments route
-app.use("/api/appointments", appointmentsRouter);
+// Middleware
+app.use(bodyParser.json());
+app.use("/api", appointmentsRouter);
 
-const { authenticateUser } = require("./middlewares/authenticationMiddleware");
-console.log('Received form data:', formData);
+// Database sync (this will create the table if it doesn't exist)
+sequelize.sync();
 
-  // You can add code here to save the form data to a database or perform other actions
-
-  // Respond with a success message or appropriate status code
-  res.status(201).json({ message: 'Form data received successfully' });
-});
-
-// Define a route that uses the authentication middleware
-app.get("/secure-route", authenticateUser, (req, res) => {
-  res.json({ message: "This route is secure." });
-});
-
-
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
