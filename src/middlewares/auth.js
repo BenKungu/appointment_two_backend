@@ -92,3 +92,59 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 module.exports = { authenticateUser };
+
+router.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  User.findOne({email: email}, (err, user) => {
+    if (err) throw err;
+
+    if (!user) {
+      return res.json({success: false, msg: 'Wrong credentials'});
+    }
+
+    if (!user.accountConfirmation) {
+      return res.json({success: false, msg: 'Account is not confirmed'});
+    }
+
+    bcrypt.compare(password, user.password, function(err, isMatch) {
+      if (isMatch) {
+        const token = jwt.sign(user, config.secret, {
+          expiresIn: 86400, // 1 week
+        });
+        // Don't include the password in the returned user object
+        const query = {userId: user._id, token: 'JWT ' + token};
+        ActiveSession.create(query, function(err, cd) {
+          user.password = null;
+          user.__v = null;
+          return res.json({
+            success: true,
+            token: 'JWT ' + token,
+            user,
+          });
+        });
+      } else {
+        return res.json({success: false, msg: 'Wrong credentials'});
+      }
+    });
+  });
+});
+
+router.post('/checkSession', reqAuth, function(req, res) {
+  res.json({success: true});
+});
+
+router.post('/logout', reqAuth, function(req, res) {
+  const token = req.body.token;
+  ActiveSession.deleteMany({token: token}, function(err, item) {
+    if (err) {
+      res.json({success: false});
+    }
+    res.json({success: true});
+  });
+});
+
+
+module.exports = router;
+
