@@ -18,21 +18,6 @@ const MyProfile = (props) => {
           style={{ minHeight: "100px" }}
         >
           <div className="container">
-            <div className="row align-items-center inner-banner p-0">
-              <div className="col-md-12 col-12 text-center">
-                <h2 className="breadcrumb-title">My Profile</h2>
-                <nav aria-label="breadcrumb" className="page-breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <Link to="/">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item" aria-current="page">
-                      My Profile
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-            </div>
           </div>
         </div>
         {/* /Breadcrumb */}
