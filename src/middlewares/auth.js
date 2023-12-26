@@ -38,21 +38,6 @@ router.post("/all", reqAuth, function (req, res) {
   });
 });
 
-router.post('/forgotpassword', (req, res) => {
-  const {email} = req.body;
-  const errors = [];
-
-  if (!email) {
-    errors.push({msg: 'Please enter all fields'});
-  }
-  User.find({email: email}).then((user) => {
-    if (user.length != 1) {
-      errors.push({msg: 'Email Address does not exist'});
-    }
-    if (errors.length > 0) {
-      res.json({success: false, errors: errors});
-    } else {
-
 router.post("/edit", reqAuth, function (req, res) {
   const { userID, name, email } = req.body;
 
@@ -147,4 +132,3 @@ router.post('/logout', reqAuth, function(req, res) {
 
 
 module.exports = router;
-
